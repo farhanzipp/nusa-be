@@ -10,12 +10,12 @@ export default class UserRepository extends Repository<UserEntity> {
 
     async createUser(
         createUserDto: CreateUserDto,
-        userId?: number,
+        // userId?: number,
     ): Promise<UserEntity> {
         const ett = this.dataSource.createEntityManager();
         const user = ett.create(UserEntity, {
             ...createUserDto,
-            createdBy: userId,
+            // createdBy: userId,
         });
 
         return await ett.save(user);
