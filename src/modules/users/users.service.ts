@@ -1,7 +1,7 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import UserRepository from 'src/repositories/user.repository.ts/user.repository';
-import HashPassword from 'src/utils/hash-password.util';
+import HashPassword from 'src/commons/utils/hash-password.util';
 
 @Injectable()
 export class UsersService {
@@ -22,11 +22,14 @@ export class UsersService {
 
     const hashedPassword = await this.hashPassword.generate(createUserDto.password);
 
-    return await this.userRepository.createUser({
+    const newUser = await this.userRepository.createUser({
       ...createUserDto,
       password: hashedPassword,
     });
+    return newUser;
   }
 
-  
+  async findOne(id: number) {
+    return await this.userRepository.findById(id);
+  }
 }
