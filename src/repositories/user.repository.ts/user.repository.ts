@@ -48,4 +48,10 @@ export default class UserRepository extends Repository<UserEntity> {
         });
         return user;
     }
+
+    async getAllUsers(): Promise<UserEntity[]> {
+        const ett = this.dataSource.createEntityManager();
+        const users = await ett.find(UserEntity);
+        return users;
+    }
 }
