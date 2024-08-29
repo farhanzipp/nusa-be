@@ -47,6 +47,11 @@ export class AuthService {
     throw new UnauthorizedException('Please check your login credentials');
   }
 
+  async whoami(user:any) {
+    const userEntity = await this.userRepository.findById(user.sub);
+    return userEntity;
+  }
+
   async refreshToken(user:any) {
     const payload = {
       username: user.username,
