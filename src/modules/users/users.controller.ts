@@ -20,7 +20,7 @@ export class UsersController {
   }
 
   @Get()
-  @Roles(Role.USER)
+  @Roles(Role.SUPER_ADMIN)
   async findAllUsers() {
     return this.usersService.findAll();
   }

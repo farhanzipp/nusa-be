@@ -1,7 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, OnModuleInit } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import UserRepository from 'src/repositories/user.repository.ts/user.repository';
 import HashPassword from 'src/commons/utils/hash-password.util';
+import { Role } from 'src/enums/role.enum';
 
 @Injectable()
 export class UsersService {
@@ -9,6 +10,19 @@ export class UsersService {
     private readonly userRepository: UserRepository,
     private readonly hashPassword: HashPassword
   ) {}
+
+  async init() {
+    const user = new CreateUserDto();
+    user.username = 'superadmin';
+    user.email = 'superadmin@admin.com';
+    user.password = await this.hashPassword.generate('superadmin');
+    user.roles = [Role.SUPER_ADMIN];
+    const username = await this.userRepository.findByUsername(user.username);
+    if (username === null) {
+      await this.userRepository.createUser(user);
+    }
+    console.log('superadmin created!!');
+  }
   async create(createUserDto: CreateUserDto) {
     const username = await this.userRepository.findByUsername(createUserDto.username);
     if (username) {
