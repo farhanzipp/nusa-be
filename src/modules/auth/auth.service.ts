@@ -24,9 +24,8 @@ export class AuthService {
     if(user && (await compare(loginDto.password, user.password))) {
       const payload = { 
         username: user.username, 
-        sub: {
-          email: user.email
-        },
+        roles: user.roles,
+        sub: user.id
       };
 
       return {
@@ -50,9 +49,8 @@ export class AuthService {
   async refreshToken(user:any) {
     const payload = {
       username: user.username,
-      sub: {
-        email: user.email
-      },
+      roles: user.roles,
+      sub: user.id,
     };
     return {
       access_token: await this.jwtService.signAsync(payload, {
