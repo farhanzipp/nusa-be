@@ -4,19 +4,18 @@ import { Serialize, SerializeInterceptor } from 'src/commons/interceptors/serial
 import { AuthService } from './auth.service';
 import { UserDto } from '../users/dto/user.dto';
 import { LoginDto } from './dto/auth.dto';
-import { RefreshJwtGuard } from 'src/commons/guards/refresh.guard';
+import { RefreshJwtGuard } from '../../commons/guards/refresh.guard';
 
 @Controller('auth')
+@Serialize(UserDto)
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
-  @Serialize(UserDto)
   @Post('register')
   async register(@Body() createUserDto: CreateUserDto) {
     return await this.authService.register(createUserDto);
   }
 
-  @Serialize(UserDto)
   @Post('login')
   async login(@Body() loginDto: LoginDto) {
     return await this.authService.login(loginDto);
@@ -24,7 +23,7 @@ export class AuthController {
 
   @UseGuards(RefreshJwtGuard)
   @Post('refresh')
-  async refreshToken(@Request() req) {
-    return await this.authService.refreshToken(req.user);
+  async refreshToken(@Request() request) {
+    return await this.authService.refreshToken(request.user);
   }
 }

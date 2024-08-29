@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { LoginDto } from './dto/auth.dto';
-import UserRepository from 'src/repositories/user.repository.ts/user.repository';
+import UserRepository from '../../repositories/user.repository.ts/user.repository';
 import { compare } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { UserDto } from '../users/dto/user.dto';

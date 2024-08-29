@@ -1,8 +1,8 @@
 import { ConflictException, Injectable, OnModuleInit } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import UserRepository from 'src/repositories/user.repository.ts/user.repository';
-import HashPassword from 'src/commons/utils/hash-password.util';
-import { Role } from 'src/enums/role.enum';
+import UserRepository from '../../repositories/user.repository.ts/user.repository';
+import HashPassword from '../../commons/utils/hash-password.util';
+import { Role } from '../../enums/role.enum';
 
 @Injectable()
 export class UsersService {
