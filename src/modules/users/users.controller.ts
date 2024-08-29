@@ -19,6 +19,12 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
+  @Get()
+  @Roles(Role.SUPER_ADMIN)
+  async findAllUsers() {
+    return this.usersService.findAll();
+  }
+
   @Get(':id')
   @Roles(Role.USER)
   async getUserProfile(@Param('id') id: number) {
