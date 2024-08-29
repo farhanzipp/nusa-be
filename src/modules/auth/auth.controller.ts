@@ -8,17 +8,16 @@ import { LoginDto } from './dto/auth.dto';
 import { RefreshJwtGuard } from '../../commons/guards/refresh.guard';
 import { JwtGuard } from 'src/commons/guards/jwt.guard';
 
+@Serialize(UserDto)
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
-  @Serialize(UserDto)
   @Post('register')
   async register(@Body() createUserDto: CreateUserDto) {
     return await this.authService.register(createUserDto);
   }
 
-  @Serialize(UserDto)
   @Post('login')
   async login(@Body() loginDto: LoginDto) {
     return await this.authService.login(loginDto);
