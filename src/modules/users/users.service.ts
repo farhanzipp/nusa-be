@@ -32,4 +32,8 @@ export class UsersService {
   async findOne(id: number) {
     return await this.userRepository.findById(id);
   }
+
+  async findAll() {
+    return await this.userRepository.getAllUsers();
+  }
 }
