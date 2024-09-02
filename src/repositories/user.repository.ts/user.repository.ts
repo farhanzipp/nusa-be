@@ -2,16 +2,14 @@ import { Injectable } from "@nestjs/common";
 import { UserEntity } from "../../entities/user.entity";
 import { CreateUserDto } from "../../modules/users/dto/create-user.dto";
 import { DataSource, Repository } from "typeorm";
+import { UpdateUserDto } from "src/modules/users/dto/update-user.dto";
 @Injectable()
 export default class UserRepository extends Repository<UserEntity> {
     constructor(private dataSource: DataSource) {
         super(UserEntity, dataSource.createEntityManager());
     }
 
-    async createUser(
-        createUserDto: CreateUserDto,
-        // userId?: number,
-    ): Promise<UserEntity> {
+    async createUser(createUserDto: CreateUserDto): Promise<UserEntity> {
         const ett = this.dataSource.createEntityManager();
         const user = ett.create(UserEntity, {
             ...createUserDto,
@@ -21,7 +19,13 @@ export default class UserRepository extends Repository<UserEntity> {
         return await ett.save(user);
     }
 
-    async findById(id: number): Promise<UserEntity> {
+    async findAllUsers(): Promise<UserEntity[]> {
+        const ett = this.dataSource.createEntityManager();
+        const users = await ett.find(UserEntity);
+        return users;
+    }
+
+    async findOneUserById(id: number): Promise<UserEntity> {
         const ett = this.dataSource.createEntityManager();
         const user = await ett.findOne(UserEntity, {
             where: { id },
@@ -29,7 +33,7 @@ export default class UserRepository extends Repository<UserEntity> {
         return user;
     }
 
-    async findByUsername(username: string): Promise<UserEntity> {
+    async findOneUserByUsername(username: string): Promise<UserEntity> {
         const ett = this.dataSource.createEntityManager();
         const user = await ett.findOne(UserEntity, {
             where: {
@@ -39,7 +43,7 @@ export default class UserRepository extends Repository<UserEntity> {
         return user;
     }
 
-    async findByEmail(email: string): Promise<UserEntity> {
+    async findOneUserByEmail(email: string): Promise<UserEntity> {
         const ett = this.dataSource.createEntityManager();
         const user = await ett.findOne(UserEntity, {
             where: {
@@ -49,9 +53,15 @@ export default class UserRepository extends Repository<UserEntity> {
         return user;
     }
 
-    async getAllUsers(): Promise<UserEntity[]> {
+    async updateUser(id: number, updateUserDto: Partial<UpdateUserDto>): Promise<UserEntity> {
+        const user = await this.findOneUserById(id);
         const ett = this.dataSource.createEntityManager();
-        const users = await ett.find(UserEntity);
-        return users;
+        const updatedUser ={ ...user, ...updateUserDto };
+        return await ett.save(UserEntity,updatedUser);
+    }
+
+    async removeUser(id: number): Promise<void> {
+        const ett = this.dataSource.createEntityManager();
+        await ett.delete(UserEntity, { id });
     }
 }
