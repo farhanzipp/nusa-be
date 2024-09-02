@@ -7,9 +7,10 @@ import { JwtGuard } from '../../commons/guards/jwt.guard';
 import { RolesGuard } from 'src/commons/guards/roles.guard';
 import { Roles } from 'src/commons/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
+import { AccessTokenGuard } from 'src/commons/guards/access-token.guard';
 
 @Controller('users')
-@UseGuards(JwtGuard, RolesGuard)
+@UseGuards(RolesGuard)
 @Serialize(UserDto)
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
@@ -28,7 +29,18 @@ export class UsersController {
   @Get(':id')
   @Roles(Role.USER)
   async getUserProfile(@Param('id') id: number) {
-    return this.usersService.findOne(+id);
+    return this.usersService.findOneById(+id);
   }
 
+  @Patch(':id')
+  @UseGuards(AccessTokenGuard)
+  async updateUser(@Param('id') id: number, @Body() updateUserDto: any) {
+    return this.usersService.update(+id, updateUserDto);
+  }
+
+  @Delete(':id')
+  @UseGuards(AccessTokenGuard)
+  removeUser(@Param('id') id: number) {
+    return this.usersService.remove(+id);
+  }
 }

@@ -11,6 +11,11 @@ import { JwtService } from '@nestjs/jwt';
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity])],
   controllers: [UsersController],
-  providers: [UsersService, UserRepository, HashPassword, JwtService],
+  providers: [
+    UsersService, 
+    UserRepository, 
+    HashPassword, 
+    JwtService,
+  ],
 })
 export class UsersModule {}

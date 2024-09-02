@@ -1,22 +1,29 @@
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { UsersService } from '../users/users.service';
 import HashPassword from 'src/commons/utils/hash-password.util';
-import UserRepository from 'src/repositories/user.repository.ts/user.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from 'src/entities/user.entity';
+import { AccessTokenStrategy } from './strategies/accessToken.strategy';
+import { RefreshTokenStrategy } from './strategies/refreshToken.strategy';
+import { UsersModule } from '../users/users.module';
+import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
+import UserRepository from 'src/repositories/user.repository.ts/user.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity])],
+  imports: [
+    TypeOrmModule.forFeature([UserEntity]),
+  ],
   controllers: [AuthController],
   providers: [
+    AccessTokenStrategy,
     AuthService,
-    UsersService,
-    UserRepository,
     HashPassword,
     JwtService,
+    RefreshTokenStrategy,
+    UsersService,
+    UserRepository,
   ],
 })
 export class AuthModule {}
