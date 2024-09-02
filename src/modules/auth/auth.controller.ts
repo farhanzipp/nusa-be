@@ -9,11 +9,12 @@ import { JwtGuard } from 'src/commons/guards/jwt.guard';
 import { Request } from 'express';
 import { AccessTokenGuard } from 'src/commons/guards/access-token.guard';
 
-
+@Serialize(UserDto)
 @Controller('auth')
 @Serialize(UserDto)
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
+
 
   @Post('signup')
   async signup(@Body() createUserDto: CreateUserDto) {
@@ -30,12 +31,4 @@ export class AuthController {
   logout(@Req() req:Request) {
     this.authService.logout(req.user['sub']);
   }
-
-  // @Get('whoami')
-  // @UseGuards(JwtGuard)
-  // async whoami(@Request() request) {
-  //   return await this.authService.whoami(request.user);
-  // }
-
-  
 }
