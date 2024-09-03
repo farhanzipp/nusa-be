@@ -1,4 +1,5 @@
 import { Expose, Exclude } from "class-transformer";
+import { Token } from "src/commons/types/token.type";
 import { Role } from "src/enums/role.enum";
 
 export class UserDto {
@@ -15,8 +16,5 @@ export class UserDto {
     roles: Role[];       
 
     @Expose()
-    accessToken: string;
-
-    @Expose()
-    refreshToken: string;
+    token: Token;
 }

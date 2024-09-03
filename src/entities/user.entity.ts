@@ -23,5 +23,8 @@ password: string;
 })
 roles: Role[];
 
+@Column({nullable: true})
+refresh!: string;
+
 }
 
