@@ -1,12 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { Serialize } from 'src/commons/interceptors/serialize.interceptor';
 import { UserDto } from './dto/user.dto';
 import { RolesGuard } from 'src/commons/guards/roles.guard';
 import { Roles } from 'src/commons/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
 import { AccessTokenGuard } from 'src/commons/guards/access-token.guard';
+import { Serialize } from 'src/commons/decorators/serialize.decorator';
 
 @Controller('users')
 @UseGuards(RolesGuard)
@@ -26,7 +26,6 @@ export class UsersController {
   }
 
   @Get(':id')
-  @Roles(Role.USER)
   async getUserProfile(@Param('id') id: number) {
     return this.usersService.findOneById(+id);
   }

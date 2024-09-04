@@ -1,15 +1,12 @@
 import { Controller, Get, Post, Body, UseGuards, Request } from '@nestjs/common';
 import { CreateUserDto } from '../users/dto/create-user.dto';
-import { Serialize } from 'src/commons/interceptors/serialize.interceptor';
 import { AuthService } from './auth.service';
-import { UserDto } from '../users/dto/user.dto';
 import { AuthDto } from './dto/auth.dto';
 
 import { AccessTokenGuard } from '../../commons/guards/access-token.guard';
 import { RefreshTokenGuard } from '../../commons/guards/refresh-token.guard';
 
 @Controller('auth')
-// @Serialize(UserDto)
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
