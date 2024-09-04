@@ -3,9 +3,9 @@ import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from '../../entities/user.entity';
-import UserRepository from '../../repositories/usr/user.repository';
 import HashPassword from '../../commons/utils/hash-password.util';
 import { JwtService } from '@nestjs/jwt';
+import UserRepository from 'src/repositories/user.repository';
 
 
 @Module({

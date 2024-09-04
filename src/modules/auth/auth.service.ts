@@ -5,7 +5,6 @@ import { AuthDto } from './dto/auth.dto';
 import { compare } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import HashPassword from 'src/commons/utils/hash-password.util';
-import { Role } from 'src/enums/role.enum';
 import { UserEntity } from 'src/entities/user.entity';
 import { JwtPayload } from 'src/commons/types/jwt-payload.type';
 import { Token } from 'src/commons/types/token.type';
@@ -25,6 +24,11 @@ export class AuthService {
       throw new BadRequestException('User already exists');
     }
 
+    const emailExists = await this.usersService.findOneByEmail(createUserDto.email);
+    if (emailExists) {
+      throw new BadRequestException('Email already exists');
+    }
+
     const hashedPassword = await this.hashPassword.generate(createUserDto.password);
     
     const newUser = await this.usersService.create({
@@ -32,10 +36,10 @@ export class AuthService {
       password: hashedPassword
     })
 
-    const tokens = await this.getTokens(newUser);
-    await this.updateRefreshToken(newUser.id, tokens.refresh_token);
+    const token = await this.getTokens(newUser);
+    await this.updateRefreshToken(newUser.id, token.refresh_token);
 
-    return tokens;
+    return {token};
   }
 
   async signin(authDto: AuthDto) {
@@ -48,15 +52,14 @@ export class AuthService {
     const token = await this.getTokens(user);
     await this.updateRefreshToken(user.id, token.refresh_token);
     
-    const response = {...user, token};
-    return response;
+    return {token};
   }
 
   async logout(userId: number) {
     return this.usersService.update(userId, {refresh: null});
   }
-
-  async refresh(id: number, token: string): Promise<Token> {
+  
+  async refresh(id: number, token: string) {
     const user = await this.usersService.findOneById(id);
     if (!user || !user.refresh)
       throw new ForbiddenException('Security token did not match');
@@ -64,9 +67,11 @@ export class AuthService {
     const matches = await this.hashPassword.compare(token, user.refresh);
     if (!matches) throw new ForbiddenException('Security token did not match');
 
-    const tokens = await this.getTokens(user);
-    return tokens;
-  }
+    const tokens= await this.getTokens(user);
+    await this.updateRefreshToken(user.id, tokens.refresh_token);
+    
+    return {...tokens};
+  }                                                                                                                                                                                                                                                                                                                                                         
 
   async updateRefreshToken(userId: number, refreshToken: string) {
     const hashedRefreshToken = await this.hashPassword.generate(refreshToken);

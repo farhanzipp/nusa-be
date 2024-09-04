@@ -9,7 +9,7 @@ import { AccessTokenGuard } from '../../commons/guards/access-token.guard';
 import { RefreshTokenGuard } from '../../commons/guards/refresh-token.guard';
 
 @Controller('auth')
-@Serialize(UserDto)
+// @Serialize(UserDto)
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
@@ -32,7 +32,6 @@ export class AuthController {
   @Post('refresh')
   @UseGuards(RefreshTokenGuard)
   async refresh(@Request() req) {
-    // return await this.authService.refresh(req.user.sub, req.user.refresh_token);
-    return await req.user;
+    return await this.authService.refresh(req.user.sub, req.user.refreshToken);
   }
 }
