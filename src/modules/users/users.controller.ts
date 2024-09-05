@@ -7,8 +7,10 @@ import { Roles } from 'src/commons/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
 import { AccessTokenGuard } from 'src/commons/guards/access-token.guard';
 import { Serialize } from 'src/commons/decorators/serialize.decorator';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('users')
+@UseGuards(AccessTokenGuard)
 @Serialize(UserDto)
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
@@ -19,7 +21,7 @@ export class UsersController {
   }
 
   @Get()
-  @UseGuards(AccessTokenGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   @Roles(Role.SUPER_ADMIN)
   async findAllUsers() {
     return this.usersService.findAll();
@@ -31,13 +33,13 @@ export class UsersController {
   }
 
   @Patch(':id')
-  @UseGuards(AccessTokenGuard)
-  async updateUser(@Param('id') id: number, @Body() updateUserDto: any) {
+  async updateUser(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(+id, updateUserDto);
   }
 
   @Delete(':id')
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(RolesGuard)
+  @Roles(Role.SUPER_ADMIN)
   removeUser(@Param('id') id: number) {
     return this.usersService.remove(+id);
   }
