@@ -9,7 +9,6 @@ import { AccessTokenGuard } from 'src/commons/guards/access-token.guard';
 import { Serialize } from 'src/commons/decorators/serialize.decorator';
 
 @Controller('users')
-@UseGuards(RolesGuard)
 @Serialize(UserDto)
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
@@ -20,6 +19,7 @@ export class UsersController {
   }
 
   @Get()
+  @UseGuards(AccessTokenGuard, RolesGuard)
   @Roles(Role.SUPER_ADMIN)
   async findAllUsers() {
     return this.usersService.findAll();

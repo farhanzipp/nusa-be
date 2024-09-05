@@ -7,7 +7,6 @@ export class RolesGuard implements CanActivate {
     constructor(private reflector: Reflector) { }
 
     canActivate(context: ExecutionContext): boolean {
-
         const requiredRoles = this.reflector.getAllAndOverride<Role[]>('roles', [
             context.getHandler(),
             context.getClass(),
@@ -19,16 +18,10 @@ export class RolesGuard implements CanActivate {
             return true;
         }
 
-        const request = context.switchToHttp().getRequest();
-        const user = request.user;
+        const { user } = context.switchToHttp().getRequest();
 
         console.log('user:', user);
 
-        if (!user || !user.roles) {
-            console.error('RolesGuard: user or user.roles is not defined');
-            return false;
-        }
-
-        return user.roles.some((role: Role) => requiredRoles.includes(role));
+        return requiredRoles.some((role: Role) => user.roles?.includes(role));
     }
 }
