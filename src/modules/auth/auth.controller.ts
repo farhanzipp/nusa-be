@@ -20,7 +20,7 @@ export class AuthController {
     return await this.authService.signin(authDto);
   }
 
-  @Get('logout')
+  @Post('logout')
   @UseGuards(AccessTokenGuard)
   logout(@Request() req) {
     this.authService.logout(req.user['sub']);
