@@ -10,14 +10,14 @@ import { RefreshTokenGuard } from '../../commons/guards/refresh-token.guard';
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
-  @Post('signup')
-  async signup(@Body() createUserDto: CreateUserDto) {
-    return await this.authService.signup(createUserDto);
+  @Post('register')
+  async register(@Body() createUserDto: CreateUserDto) {
+    return await this.authService.register(createUserDto);
   }
 
-  @Post('signin')
-  async signin(@Body() authDto: AuthDto) {
-    return await this.authService.signin(authDto);
+  @Post('login')
+  async login(@Body() authDto: AuthDto) {
+    return await this.authService.login(authDto);
   }
 
   @Post('logout')

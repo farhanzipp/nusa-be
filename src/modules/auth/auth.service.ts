@@ -17,7 +17,7 @@ export class AuthService {
     private readonly hashPassword: HashPassword,
   ) {}
 
-  async signup(createUserDto: CreateUserDto) {
+  async register(createUserDto: CreateUserDto) {
     const userExists = await this.usersService.findOneByUsername(createUserDto.username);
     
     if (userExists) {
@@ -39,10 +39,10 @@ export class AuthService {
     const token = await this.getTokens(newUser);
     await this.updateRefreshToken(newUser.id, token.refresh_token);
 
-    return {token};
+    return token;
   }
 
-  async signin(authDto: AuthDto) {
+  async login(authDto: AuthDto) {
     const user = await this.usersService.findOneByEmail(authDto.email);
     if(!user) throw new BadRequestException('User does not exist');
 
@@ -52,7 +52,7 @@ export class AuthService {
     const token = await this.getTokens(user);
     await this.updateRefreshToken(user.id, token.refresh_token);
     
-    return {token};
+    return token;
   }
 
   async logout(userId: number) {
