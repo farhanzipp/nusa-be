@@ -14,8 +14,15 @@ async function bootstrap() {
     })
   );
 
+  const corsDev: string[] = process?.env?.CORS_DEV?.split(',') ?? ['null'];
+
   const majVersion = version.split('.');
   app.setGlobalPrefix(`api/v${majVersion[0]}`);
+  app.enableCors({
+    origin: [...corsDev],
+    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'CONNECT', 'OPTIONS'],
+    credentials: true,
+  });
 
   const usersService = app.get(UsersService);
   await usersService.init();
