@@ -36,7 +36,7 @@ export class AuthService {
       password: hashedPassword
     })
 
-    const token = await this.getTokens(newUser);
+    const token = await this.generateToken(newUser);
     await this.updateRefreshToken(newUser.id, token.refresh_token);
 
     return token;
@@ -49,7 +49,7 @@ export class AuthService {
     const passwordMatched = await compare(authDto.password, user.password);
     if(!passwordMatched) throw new BadRequestException('Password is Incorrect');
 
-    const token = await this.getTokens(user);
+    const token = await this.generateToken(user);
     await this.updateRefreshToken(user.id, token.refresh_token);
     
     return token;
@@ -67,7 +67,7 @@ export class AuthService {
     const matches = await this.hashPassword.compare(token, user.refresh);
     if (!matches) throw new ForbiddenException('Security token did not match');
 
-    const tokens= await this.getTokens(user);
+    const tokens= await this.generateToken(user);
     await this.updateRefreshToken(user.id, tokens.refresh_token);
     
     return {...tokens};
@@ -78,7 +78,7 @@ export class AuthService {
     await this.usersService.update(userId, {refresh: hashedRefreshToken});
   }
 
-  async getTokens(user: UserEntity): Promise<Token> {
+  async generateToken(user: UserEntity): Promise<Token> {
     const jwtPayload: JwtPayload = {
       sub: user.id,
       username: user.username,
